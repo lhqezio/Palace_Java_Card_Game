@@ -2,7 +2,7 @@ public class Ai {
     public Deck think(Card card,Deck deck){
         Deck nonWild=new Deck();
         Deck wild = new Deck();
-        //Separate between Wild Cards and Non Wild to two different decks.
+        //Separate between Wild Cards and Non-Wild to two different decks.
         for(int i =0;i<deck.length();i++){
             if( deck.getCard(i).getValue() != 2 && deck.getCard(i).getValue() != 10){
                 nonWild.put(deck.getCard(i));
@@ -14,11 +14,11 @@ public class Ai {
         // Sort the two so minimum would be the first to appear
         nonWild.sort();
         wild.sort();
-        //As suit doesn't matter in this game, report the first playble card in non wild pile(Since it's sorted it's now minimum) 
+        //As suit doesn't matter in this game, report the first playable card in non-wild pile(Since it's sorted it's now minimum)
         //and then look for cards with the same value and add those to the playable deck
         boolean noCard = true;
         Deck cardsToPlay = new Deck();
-        for(int i = 0;i<nonWild.length()||noCard;i++){
+        for(int i = 0;i<nonWild.length()&&noCard;i++){
             if(nonWild.getCard(i).getValue()>card.getValue()){
                 cardsToPlay.put(nonWild.getCard(i));
                 noCard = false;
@@ -30,11 +30,11 @@ public class Ai {
                 }
             }    
         }
-        //if there's wild card and no playable non wild return the first wild card (it would be min since deck is sorted). Don't check for other reoccurences
+        //if there's wild card and no playable non-wild return the first wild card (it would be min since deck is sorted). Don't check for other reoccurences
         if(wild.length() != 0 && noCard){
             cardsToPlay.put(wild.getCard(0));
         }
-        //if playable is empty program will instruct the ai/or recommend player to pick the deck up
+        //if playable is empty program will instruct the AI/or recommend player to pick the deck up
         return cardsToPlay;
     }
     //Using the think method to get cards then give the best advice in the form of string.
@@ -47,7 +47,7 @@ public class Ai {
         else {
             recmd.append("Play: ");
             for(int i=0;i<toPlay.length();i++){
-                recmd.append(toPlay.getCard(i).toString()+" ");
+                recmd.append(toPlay.getCard(i).toString()).append(" ");
             } 
         }
         return recmd.toString();

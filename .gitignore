@@ -2,3 +2,4 @@
 *.class
 # Instruction Documents
 *.docx
+/out/
