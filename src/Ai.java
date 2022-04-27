@@ -34,7 +34,7 @@ public class Ai {
                 }
             }    
         }
-        //if there's wild card and no playable non wild return the first wild card (it would be min since deck is sorted). Don't check for other reoccurences
+        //if there's wild card and no playable non wild return the first wild card (it would be min since deck is sorted). Don't check for other reoccurences since you might want to save it,
         if(wild.length() != 0 && noCard){
             cardsToPlay.put(wild.getCard(0));
         }
