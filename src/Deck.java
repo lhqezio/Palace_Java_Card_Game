@@ -14,7 +14,7 @@ public class Deck {
         return this.length;
     }
     public Card getCard(int index){
-        if(index<0||index>length){
+        if(index<0||index>=length){
             throw new ArrayIndexOutOfBoundsException("Index must be between 0 and "+(length-1));
         }
         return deckCard[index];
