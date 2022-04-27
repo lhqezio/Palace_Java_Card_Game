@@ -22,17 +22,17 @@ public class Card {
         StringBuilder cardString=new StringBuilder();
         switch(value){
             case 2:case 3:case 4:case 5:case 6:case 7:case 8:case 9:case 10:cardString.append(this.value+" of ");break;
-            case 11:cardString.append("Jack of ");break;
-            case 12:cardString.append("Queen of ");break;
-            case 13:cardString.append("King of ");break;
-            case 14:cardString.append("Ace of ");break;
+            case 11:cardString.append("J");break;
+            case 12:cardString.append("Q");break;
+            case 13:cardString.append("K");break;
+            case 14:cardString.append("A");break;
             default: break; //Exception handling done by Card class constructor 
         }
         switch(this.suit){
-            case CLUB:cardString.append("Club");break;
-            case HEART:cardString.append("Heart");break;
-            case SPADE:cardString.append("Spade");break;
-            case DIAMOND:cardString.append("Diamond");break;
+            case CLUB:cardString.append("oC");break;
+            case HEART:cardString.append("oH");break;
+            case SPADE:cardString.append("oS");break;
+            case DIAMOND:cardString.append("oD");break;
             default:     break; //Exception handling done by Enumeration class
         }
         return cardString.toString();
