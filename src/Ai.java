@@ -23,9 +23,13 @@ public class Ai {
                 cardsToPlay.put(nonWild.getCard(i));
                 noCard = false;
                 i++;
-                for(;i<nonWild.length();i++){
+                while(i<nonWild.length()){
                     if(nonWild.getCard(i).getValue()==cardsToPlay.getCard(0).getValue()){
                         cardsToPlay.put(nonWild.getCard(i));
+                        i++;
+                    }
+                    else {
+                        break;
                     }
                 }
             }    
