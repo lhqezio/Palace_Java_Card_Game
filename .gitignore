@@ -3,3 +3,4 @@
 # Instruction Documents
 *.docx
 /out/
+*.sh
