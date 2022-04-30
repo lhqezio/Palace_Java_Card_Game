@@ -1,13 +1,15 @@
 
 import java.util.concurrent.ThreadLocalRandom;
 
-//Deck class that contains all the necessary methods for the game. Length and index numbering is similar to the one of a usual Array
+//Deck class that contains all the necessary methods for the game.
+//Length and index numbering is similar to the one of a usual Array
 public class Deck {
     final private Card[] deckCard;
     private int length;
     public Deck(){
         length=0;
-        //Every Deck is 0 at initialize, Growing,Desizing,Regrowing accordingly to the process of removing and adding card.
+        //Every Deck is 0 at initialize
+        //Growing,Desizing,Regrowing accordingly to the process of removing and adding card.
         deckCard = new Card[104];
     }
     public int length(){
@@ -20,8 +22,8 @@ public class Deck {
         return deckCard[index];
     }
     public void put(Card card){
-        this.deckCard[length]=card;
         this.length++;
+        this.deckCard[length-1]=card;
     }
     public void pull(int index){
         if(index<0||index>=length){

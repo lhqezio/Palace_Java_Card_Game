@@ -1,8 +1,9 @@
 import java.lang.StringBuilder;
-public class Card {
+public class Card  {
     private final suit suit;
     private final int value;
-    public enum suit { CLUB, HEART, SPADE, DIAMOND }
+    public enum suit { CLUB, HEART, 
+                        SPADE, DIAMOND }
     Card(suit suit, int value){
         this.suit=suit;
         if(value<2||value>14){
@@ -18,16 +19,17 @@ public class Card {
     public suit getSuit(){
         return this.suit;
     }
+    @Override
     public String toString(){
         StringBuilder cardString=new StringBuilder();
         switch (value) {
-            case 2, 3, 4, 5, 6, 7, 8, 9, 10 -> cardString.append(this.value);
+            case 2, 3, 4, 5, 6, 7, 8, 9, 10 ->
+                cardString.append(this.value);
             case 11 -> cardString.append("J");
             case 12 -> cardString.append("Q");
             case 13 -> cardString.append("K");
             case 14 -> cardString.append("A");
-            default -> {
-            } //Exception handling done by Card class constructor
+            default -> {} //Exception handling done by Card class constructorc
         }
         switch (this.suit) {
             case CLUB -> cardString.append("oC");

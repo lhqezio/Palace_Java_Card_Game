@@ -4,7 +4,7 @@ public class Ai {
         Deck wild = new Deck();
         //Separate between Wild Cards and Non-Wild to two different decks.
         for(int i =0;i<deck.length();i++){
-            if( deck.getCard(i).getValue() != 2 && deck.getCard(i).getValue() != 10){
+            if( deck.getCard(i).getValue() != 2 && deck.getCard(i).getValue() != 10 && deck.getCard(i).getValue() != 5 ){
                 nonWild.put(deck.getCard(i));
             }
             else {
