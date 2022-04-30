@@ -15,10 +15,6 @@ public class Card {
         return this.value;
     }
 
-    public suit getSuit() {
-        return this.suit;
-    }
-
     @Override
     public String toString() {
         StringBuilder cardString = new StringBuilder();
