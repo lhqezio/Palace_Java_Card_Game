@@ -29,7 +29,7 @@ public class Card {
             case 13 -> cardString.append("K");
             case 14 -> cardString.append("A");
             default -> {
-            } //Exception handling done by Card class constructorc
+            } //Exception handling done by Card class constructor
         }
         switch (this.suit) {
             case CLUB -> cardString.append("oC");
