@@ -1,5 +1,5 @@
 public class Ai {
-    public Deck think(Card card, Deck deck) {
+    public static Deck think(Card card, Deck deck) {
         Deck nonWild = new Deck();
         Deck wild = new Deck();
         //Separate between Wild Cards and Non-Wild to two different decks.
@@ -41,7 +41,7 @@ public class Ai {
     }
 
     //Using the think method to get cards then give the best advice in the form of string.
-    public String recommend(Card card, Deck deck) {
+    public static String recommend(Card card, Deck deck) {
         StringBuilder recmd = new StringBuilder();
         Deck toPlay = think(card, deck);
         if (toPlay.length() == 0) {
