@@ -1,8 +1,9 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
 public class Palace {
     public static void main(String[] args) {
-        while(true){
+        while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.println("Palace\n1)Play\n2)Manual\n3)Quit");
             String choice = sc.nextLine().toLowerCase();
@@ -40,9 +41,11 @@ public class Palace {
             }
         }
     }
-    public static String manual(){
+
+    public static String manual() {
         return "Game rules can be found here: https://gamerules.com/rules/shithead-card-game/\nAt anypoint of the game excluding the main menu and player number:\nm for manual,r for recommendation,q to quit directly f to forfeit(1 player)";
     }
+
     public static void pause(int sec) {
         try {
             Thread.sleep(10000);
