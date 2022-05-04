@@ -1,4 +1,8 @@
 public class Card {
+    public enum suit {
+        CLUB, HEART,
+        SPADE, DIAMOND
+    }
     private final suit suit;
     private final int value;
 
@@ -36,10 +40,5 @@ public class Card {
             } //Exception handling done by Enumeration class
         }
         return cardString.toString();
-    }
-
-    public enum suit {
-        CLUB, HEART,
-        SPADE, DIAMOND
     }
 }
