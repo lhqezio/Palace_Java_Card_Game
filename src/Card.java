@@ -1,4 +1,4 @@
-public class Card {
+public class Card implements Comparable<Card> {
     public enum suit {
         CLUB, HEART,
         SPADE, DIAMOND
@@ -23,7 +23,8 @@ public class Card {
     public String toString() {
         StringBuilder cardString = new StringBuilder();
         switch (value) {
-            case 2, 3, 4, 5, 6, 7, 8, 9, 10 -> cardString.append(this.value);
+            case 2, 3, 4, 5, 6, 7, 8, 9 -> cardString.append(this.value);
+            case 10 -> cardString.append("T");
             case 11 -> cardString.append("J");
             case 12 -> cardString.append("Q");
             case 13 -> cardString.append("K");
@@ -40,5 +41,23 @@ public class Card {
             } //Exception handling done by Enumeration class
         }
         return cardString.toString();
+    }
+    @Override
+    public int compareTo(Card o) {
+        if(o.value==10){
+            throw new IllegalArgumentException("Handle 10 wildcard locally");
+        }
+        if(this.value>o.value&&o.value!=2){
+            return 1;
+        }
+        else if(this.value<o.value&&o.value!=2){
+            return -1;
+        }
+        else if(this.value==o.value){
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 }

@@ -23,7 +23,6 @@ public class Deck {
         }
         return deckCard[index];
     }
-
     public void put(Card card) {
         this.length++;
         this.deckCard[length - 1] = card;
@@ -73,6 +72,12 @@ public class Deck {
             int r = ThreadLocalRandom.current().nextInt(0, original.length());
             deckCard[i] = original.getCard(r);
             original.pull(r);
+        }
+    }
+    public void purge() {
+        this.length = 0;
+        for(Card card:deckCard){
+            card=null;
         }
     }
 }
