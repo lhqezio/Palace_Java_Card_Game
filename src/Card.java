@@ -47,10 +47,10 @@ public class Card implements Comparable<Card> {
         if(o.value==10){
             throw new IllegalArgumentException("Handle 10 wildcard locally");
         }
-        if(this.value>o.value&&o.value!=2){
+        if(this.value>o.value&&o.value!=2&&this.value!=2){
             return 1;
         }
-        else if(this.value<o.value&&o.value!=2){
+        else if(this.value<o.value&&o.value!=2&&this.value!=2){
             return -1;
         }
         else if(this.value==o.value){

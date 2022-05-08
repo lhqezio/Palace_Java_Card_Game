@@ -26,4 +26,8 @@ public class Player {
         }
         return string.toString();
     }
+    public int currentPlayer(int turn){
+        return players.get(turn);
+    }
+
 }

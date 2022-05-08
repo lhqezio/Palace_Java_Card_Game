@@ -1,5 +1,7 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Palace {
     public static void main(String[] args) {
@@ -30,7 +32,7 @@ public class Palace {
 
                     }
                     if((5-numPlayer)>0){
-                        System.out.println("How many bot (0-"+(5-numPlayer));
+                        System.out.println("How many bot (0-"+(5-numPlayer)+")");
                         while (true) {
                             try {
                                 bot = sc.nextInt();
@@ -88,6 +90,53 @@ public class Palace {
                         }
                     }
                     System.out.println("Play Order\n" + p.whoGoFirst());
+                    System.out.println(t);
+                    boolean turnOver = false;
+                    boolean gameOver = false;
+                    int turn = 0;
+                    int total = bot + numPlayer;
+                    while(!gameOver){
+                        System.out.println("Current Player: "+(p.currentPlayer(turn)+1));
+                        System.out.println("Input numbers of card you want to play Ex:1 or 1,2,3 or s or d or p or m (manual)");
+                        while (!turnOver) {
+                            try {
+                                String input = sc.nextLine();
+                                if (input.length() == 1) {
+                                    Pattern pattern = Pattern.compile("[0-9]");
+                                    Matcher matcher = pattern.matcher(input);
+                                    if (matcher.find()) {
+                                        int[] selection = new int[]{Integer.parseInt(input)-1};
+                                        turnOver = t.play(selection, p.currentPlayer(turn));
+                                    } else {
+                                        turnOver = t.play(input.charAt(0), p.currentPlayer(turn));
+                                    }
+                                } else if (input.length() > 1) {
+                                    System.out.println(input);
+                                    String[] inputSeparated = input.split(",");
+                                    int[] selections = new int[inputSeparated.length];
+                                    for (int i = 0; i < selections.length; i++) {
+                                        selections[i] = Integer.parseInt(inputSeparated[i])-1;
+                                    }
+                                    turnOver = t.play(selections, p.currentPlayer(turn));
+                                }
+                            }
+                            catch (NumberFormatException e){
+                                System.err.println("Invalid choice(garbage input),try again");
+                            }
+                            catch (ArrayIndexOutOfBoundsException e){
+                                System.err.println("Invalid Card number");
+                            }
+                        }
+                        gameOver=t.verify(p.currentPlayer(turn));
+                        turn++;
+                        turnOver=false;
+                        System.out.println("\n\n"+t);
+                        if(turn==total){
+                            turn=0;
+                        }
+                    }
+                    
+                    
                 }
                 default -> System.err.println("Invalid input please try again");
             }
