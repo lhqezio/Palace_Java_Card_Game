@@ -18,7 +18,7 @@ public class Palace {
                 case "1", "play" -> {
                     System.out.println("How many human player (0-5) ?");
                     int numPlayer;
-                    int bot=0;
+                    int bot = 0;
                     while (true) {
                         try {
                             numPlayer = sc.nextInt();
@@ -31,17 +31,17 @@ public class Palace {
                         }
 
                     }
-                    if((5-numPlayer)>0){
+                    if ((5 - numPlayer) > 0) {
                         int minBot = 2;
-                        minBot-=numPlayer;
-                        if(minBot<0){
-                            minBot=0;
+                        minBot -= numPlayer;
+                        if (minBot < 0) {
+                            minBot = 0;
                         }
-                        System.out.println("How many bot ("+minBot+"-"+(5-numPlayer)+")");
+                        System.out.println("How many bot (" + minBot + "-" + (5 - numPlayer) + ")");
                         while (true) {
                             try {
                                 bot = sc.nextInt();
-                                if (bot < minBot || bot > (5-numPlayer)) {
+                                if (bot < minBot || bot > (5 - numPlayer)) {
                                     throw new InputMismatchException();
                                 }
                                 break;
@@ -51,14 +51,14 @@ public class Palace {
 
                         }
                     }
-                    Table t = new Table(numPlayer+bot);
-                    Player p = new Player(numPlayer,bot);
+                    Table t = new Table(numPlayer + bot);
+                    Player p = new Player(numPlayer, bot);
                     System.out.println(t);
                     System.out.println("Phase 1: Swap your card");
                     int curPlayer = 0;
                     choice:
-                    while (curPlayer < bot+numPlayer) {
-                        if(p.isHuman(curPlayer)){
+                    while (curPlayer < bot + numPlayer) {
+                        if (p.isHuman(curPlayer)) {
                             System.out.println("Player " + (curPlayer + 1) + " do you want to swap card(y/n/a(auto-swap))");
                             char ans = sc.next().charAt(0);
                             switch (ans) {
@@ -99,8 +99,7 @@ public class Palace {
                                 }
                                 default -> System.err.println("Invalid value");
                             }
-                        }
-                        else {
+                        } else {
                             t.autoSwap(curPlayer);
                             curPlayer++;
                         }
@@ -114,20 +113,20 @@ public class Palace {
                     int total = bot + numPlayer;
                     pause(3);
                     System.out.println("      Phase two: Playing");
-                    while(!gameOver){
-                        System.out.println(" Current Player:  "+(p.currentPlayer(turn)+1));
-                        if(p.isHuman(turn)){
-                            System.out.println("Input numbers of card you want to play Ex:1 or 1,2,3. Input m for more options and gameplay." );
+                    while (!gameOver) {
+                        System.out.println(" Current Player:  " + (p.currentPlayer(turn) + 1));
+                        if (p.isHuman(turn)) {
+                            System.out.println("Input numbers of card you want to play Ex:1 or 1,2,3. Input m for more options and gameplay.");
                         }
                         while (!turnOver) {
-                            if(p.isHuman(turn)){
+                            if (p.isHuman(turn)) {
                                 try {
                                     String input = sc.nextLine();
                                     if (input.length() == 1) {
                                         Pattern pattern = Pattern.compile("[0-9]");
                                         Matcher matcher = pattern.matcher(input);
                                         if (matcher.find()) {
-                                            int[] selection = new int[]{Integer.parseInt(input)-1};
+                                            int[] selection = new int[]{Integer.parseInt(input) - 1};
                                             turnOver = t.play(selection, p.currentPlayer(turn));
                                         } else {
                                             turnOver = t.play(input.charAt(0), p.currentPlayer(turn));
@@ -136,39 +135,35 @@ public class Palace {
                                         String[] inputSeparated = input.split(",");
                                         int[] selections = new int[inputSeparated.length];
                                         for (int i = 0; i < selections.length; i++) {
-                                            selections[i] = Integer.parseInt(inputSeparated[i])-1;
+                                            selections[i] = Integer.parseInt(inputSeparated[i]) - 1;
                                         }
                                         turnOver = t.play(selections, p.currentPlayer(turn));
                                     }
-                                }
-                                catch (NumberFormatException e){
+                                } catch (NumberFormatException e) {
                                     System.err.println("Invalid choice(garbage input),try again");
-                                }
-                                catch (ArrayIndexOutOfBoundsException e){
+                                } catch (ArrayIndexOutOfBoundsException e) {
                                     System.err.println("Invalid Card number");
                                 }
-                            }
-                            else{
-                                turnOver=t.autoPlay(p.currentPlayer(turn));
+                            } else {
+                                turnOver = t.autoPlay(p.currentPlayer(turn));
                             }
                         }
-                        gameOver=t.verify(p.currentPlayer(turn));
-                        if (gameOver){
-                            System.out.println("Player "+(p.currentPlayer(turn)+1)+" won");
+                        gameOver = t.verify(p.currentPlayer(turn));
+                        if (gameOver) {
+                            System.out.println("Player " + (p.currentPlayer(turn) + 1) + " won");
                             System.out.println(t);
-                        }
-                        else {
+                        } else {
                             turn++;
-                            turnOver=false;
-                            System.out.println("\n\n"+t);
-                            if(turn==total){
-                                turn=0;
+                            turnOver = false;
+                            System.out.println("\n\n" + t);
+                            if (turn == total) {
+                                turn = 0;
                             }
                         }
                         pause(3);
                     }
-                    
-                    
+
+
                 }
                 default -> System.err.println("Invalid input please try again");
             }

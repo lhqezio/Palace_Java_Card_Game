@@ -23,6 +23,7 @@ public class Deck {
         }
         return deckCard[index];
     }
+
     public void put(Card card) {
         this.length++;
         this.deckCard[length - 1] = card;
@@ -74,6 +75,7 @@ public class Deck {
             original.pull(r);
         }
     }
+
     public void purge() {
         this.length = 0;
     }

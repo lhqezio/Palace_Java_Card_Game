@@ -1,11 +1,6 @@
 public class Card implements Comparable<Card> {
-    public enum suit {
-        CLUB, HEART,
-        SPADE, DIAMOND
-    }
     private final suit suit;
     private final int value;
-
     Card(suit suit, int value) {
         this.suit = suit;
         if (value < 2 || value > 14) {
@@ -18,7 +13,11 @@ public class Card implements Comparable<Card> {
     public int getValue() {
         return this.value;
     }
-    public suit getSuit() {return this.suit;}
+
+    public suit getSuit() {
+        return this.suit;
+    }
+
     @Override
     public String toString() {
         StringBuilder cardString = new StringBuilder();
@@ -42,20 +41,23 @@ public class Card implements Comparable<Card> {
         }
         return cardString.toString();
     }
+
     @Override
     public int compareTo(Card o) {
 
-        if(this.value>o.value&&o.value!=2&&this.value!=2){
+        if (this.value > o.value && o.value != 2 && this.value != 2) {
             return 1;
-        }
-        else if(this.value<o.value&&o.value!=2&&this.value!=2){
+        } else if (this.value < o.value && o.value != 2 && this.value != 2) {
             return -1;
-        }
-        else if(this.value==o.value){
+        } else if (this.value == o.value) {
             return 0;
-        }
-        else{
+        } else {
             return 1;
         }
+    }
+
+    public enum suit {
+        CLUB, HEART,
+        SPADE, DIAMOND
     }
 }

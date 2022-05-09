@@ -181,7 +181,7 @@ public class Table {
                 if (playingPile.length() == 0) {
                     System.out.println("Pile empty");
                 } else {
-                    System.out.println("Player "+(player+1)+" picked the pile up");
+                    System.out.println("Player " + (player + 1) + " picked the pile up");
                     for (int i = 0; i < playingPile.length(); i++) {
                         playerDeck[player][0].put(playingPile.getCard(i));
                     }
@@ -192,12 +192,11 @@ public class Table {
             case 'd' -> {
                 if (mainDeck.length() == 0) {
                     System.out.println("Draw deck empty");
-                }
-                else {
+                } else {
                     Card drew = mainDeck.getCard(0);
                     mainDeck.pull(0);
                     System.out.println("Player " + (player + 1) + " drew " + drew);
-                    if (drew.compareTo(playingPile.getCard(playingPile.length() - 1)) <  0&& drew.getValue() !=10 ) {
+                    if (drew.compareTo(playingPile.getCard(playingPile.length() - 1)) < 0 && drew.getValue() != 10) {
                         System.out.println("Drew card is smaller than current card on pile,picking the pile up");
                         playerDeck[player][0].put(drew);
                         for (int i = 0; i < playingPile.length(); i++) {
@@ -209,9 +208,9 @@ public class Table {
                         System.out.println("Drew success");
                         playingPile.put(drew);
                         turnOver = true;
-                    } else if (drew.getValue()==10) {
+                    } else if (drew.getValue() == 10) {
                         System.out.println("Drew 10 play one more turn:");
-                        if(playingPile.length() != 0) {
+                        if (playingPile.length() != 0) {
                             playingPile.purge();
                         }
                     }
@@ -231,8 +230,7 @@ public class Table {
                 } else {
                     try {
                         System.out.println(Ai.recommend(playingPile.getCard(playingPile.length() - 1), playerDeck[player][curDeck]));
-                    }
-                    catch (ArrayIndexOutOfBoundsException e){
+                    } catch (ArrayIndexOutOfBoundsException e) {
                         System.out.println(Ai.recommend(playerDeck[player][curDeck]));
                     }
                 }
@@ -253,7 +251,7 @@ public class Table {
                     System.out.println(this + "\nInput:");
                 }
             }
-            case 'a' -> turnOver=this.autoPlay(player);
+            case 'a' -> turnOver = this.autoPlay(player);
             default -> System.out.println("Invalid input");
         }
         return turnOver;
@@ -266,7 +264,7 @@ public class Table {
         } else if (mainDeck.length() != 0 && playerDeck[currentPlayer][0].length() < 3) {
             StringBuilder str = new StringBuilder();
             str.append("  Player ").append(currentPlayer + 1).append(" drew:  ");
-            while(!(playerDeck[currentPlayer][0].length()==3||mainDeck.length()==0)){
+            while (!(playerDeck[currentPlayer][0].length() == 3 || mainDeck.length() == 0)) {
                 str.append(mainDeck.getCard(0)).append(" ");
                 playerDeck[currentPlayer][0].put(mainDeck.getCard(0));
                 mainDeck.pull(0);
@@ -275,9 +273,10 @@ public class Table {
         }
         return gameOver;
     }
-    public boolean autoPlay(int player){
+
+    public boolean autoPlay(int player) {
         int[] selections;
-        int curDeck=2;
+        int curDeck = 2;
         boolean turnOver;
         for (int i = 0; i < playerDeck[player].length; i++) {
             if (playerDeck[player][i].length() != 0) {
@@ -285,47 +284,44 @@ public class Table {
                 break;
             }
         }
-        if(curDeck!=2){
+        if (curDeck != 2) {
             Deck deck = playerDeck[player][curDeck];
             Deck cardsToPlay;
-            if(playingPile.length()==0){
+            if (playingPile.length() == 0) {
                 cardsToPlay = Ai.think(deck);
-            }
-            else {
-                cardsToPlay = Ai.think(playingPile.getCard(playingPile.length()-1),deck);
+            } else {
+                cardsToPlay = Ai.think(playingPile.getCard(playingPile.length() - 1), deck);
             }
             selections = new int[cardsToPlay.length()];
-            for(int i = 0;i < selections.length;i++){
-                for(int z = 0;z < deck.length();z++){
-                    if(cardsToPlay.getCard(i).getValue()==deck.getCard(z).getValue()&&cardsToPlay.getCard(i).getSuit()==deck.getCard(z).getSuit()){
-                        selections[i]=z;
+            for (int i = 0; i < selections.length; i++) {
+                for (int z = 0; z < deck.length(); z++) {
+                    if (cardsToPlay.getCard(i).getValue() == deck.getCard(z).getValue() && cardsToPlay.getCard(i).getSuit() == deck.getCard(z).getSuit()) {
+                        selections[i] = z;
                     }
                 }
             }
-        }
-        else {
+        } else {
             selections = new int[]{0};
             return this.play(selections, player);
         }
-        if(selections.length!=0){
-            turnOver=this.play(selections,player);
-        }
-        else{
-            if(mainDeck.length()==0){
-                turnOver=this.play('p',player);
-            }
-            else {
-                turnOver=this.play('d',player);
+        if (selections.length != 0) {
+            turnOver = this.play(selections, player);
+        } else {
+            if (mainDeck.length() == 0) {
+                turnOver = this.play('p', player);
+            } else {
+                turnOver = this.play('d', player);
             }
         }
         return turnOver;
     }
-    public void autoSwap(int player){
+
+    public void autoSwap(int player) {
         Deck deck = new Deck();
-        for(int i = 0;i<playerDeck[player][0].length();i++){
+        for (int i = 0; i < playerDeck[player][0].length(); i++) {
             deck.put(playerDeck[player][0].getCard(i));
         }
-        for(int i = 0;i<playerDeck[player][1].length();i++){
+        for (int i = 0; i < playerDeck[player][1].length(); i++) {
             deck.put(playerDeck[player][1].getCard(i));
         }
         playerDeck[player][0].purge();
@@ -342,29 +338,28 @@ public class Table {
         }
         wild.sort();
         nonWild.sort();
-        if(wild.length()!=0){
-            for(int i = 0;wild.length()!=0;i++){
-                if(i<3) {
+        if (wild.length() != 0) {
+            for (int i = 0; wild.length() != 0; i++) {
+                if (i < 3) {
                     playerDeck[player][1].put(wild.getCard(wild.length() - 1));
                     wild.pull(wild.length() - 1);
-                }
-                else {
+                } else {
                     playerDeck[player][0].put(wild.getCard(0));
                     wild.pull(0);
                 }
             }
         }
-        while(playerDeck[player][0].length()<3){
+        while (playerDeck[player][0].length() < 3) {
             playerDeck[player][0].put(nonWild.getCard(0));
             nonWild.pull(0);
         }
-        while (playerDeck[player][1].length()<3){
+        while (playerDeck[player][1].length() < 3) {
             playerDeck[player][1].put(nonWild.getCard(0));
             nonWild.pull(0);
         }
         playerDeck[player][0].sort();
         playerDeck[player][1].sort();
-        System.out.println("Player "+(player+1)+" auto-swapped");
+        System.out.println("Player " + (player + 1) + " auto-swapped");
         System.out.println(this);
     }
 }

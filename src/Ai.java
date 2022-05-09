@@ -17,7 +17,7 @@ public class Ai {
         //and then look for cards with the same value and add those to the playable deck
         boolean noCard = true;
         Deck cardsToPlay = new Deck();
-        if(nonWild.length() != 0){
+        if (nonWild.length() != 0) {
             for (int i = 0; i < nonWild.length() && noCard; i++) {
                 if (nonWild.getCard(i).getValue() >= card.getValue()) {
                     cardsToPlay.put(nonWild.getCard(i));
@@ -41,7 +41,8 @@ public class Ai {
         //if playable is empty program will instruct the AI/or recommend player to pick the deck up
         return cardsToPlay;
     }
-    public static Deck think(Deck deck){
+
+    public static Deck think(Deck deck) {
         Deck cardsToPlay = new Deck();
         Deck nonWild = new Deck();
         Deck wild = new Deck();
@@ -56,17 +57,16 @@ public class Ai {
         // Sort the two so minimum would be the first to appear
         nonWild.sort();
         wild.sort();
-        if(nonWild.length()!=0){
+        if (nonWild.length() != 0) {
             cardsToPlay.put(nonWild.getCard(0));
-            for(int i = 1;i < nonWild.length();i++){
-                if(nonWild.getCard(i).getValue()==cardsToPlay.getCard(0).getValue()){
+            for (int i = 1; i < nonWild.length(); i++) {
+                if (nonWild.getCard(i).getValue() == cardsToPlay.getCard(0).getValue()) {
                     cardsToPlay.put(nonWild.getCard(i));
-                }
-                else {
+                } else {
                     break;
                 }
             }
-        } else if (wild.length()!=0) {
+        } else if (wild.length() != 0) {
             cardsToPlay.put(wild.getCard(0));
         }
         return cardsToPlay;
@@ -86,6 +86,7 @@ public class Ai {
         }
         return recmd.toString();
     }
+
     public static String recommend(Deck deck) {
         StringBuilder recmd = new StringBuilder();
         Deck toPlay = think(deck);
