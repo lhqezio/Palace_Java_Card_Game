@@ -76,8 +76,5 @@ public class Deck {
     }
     public void purge() {
         this.length = 0;
-        for(Card card:deckCard){
-            card=null;
-        }
     }
 }

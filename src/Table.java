@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class Table {
     private final Deck mainDeck;
@@ -11,7 +10,7 @@ public class Table {
     //For each player 0 would be playing deck,1 would be the showing deck and 2 would be the hidden one
     Table(int playerNum) {
         if (playerNum < 2 || playerNum > 5) {
-            throw new IllegalArgumentException("Player number must be between 2 and 4 ");
+            throw new IllegalArgumentException("Player number must be between 2 and 5 ");
         }
         int cardPerDeck = 3;
         //3 cards per deck like game rule
@@ -111,155 +110,261 @@ public class Table {
                 return false;
             }
         }
-        if(playingPile.length()==0){
+
+        Card toPlay = playerDeck[player][curDeck].getCard(selections[0]);
+        if (playingPile.length() == 0 && toPlay.getValue() != 10) {
             StringBuilder str = new StringBuilder();
-            str.append("Player ").append(player+1).append(" played:  ");
+            str.append("Player ").append(player + 1).append(" played:  ");
             for (int selection : selections) {
                 playingPile.put(playerDeck[player][curDeck].getCard(selection));
                 str.append(playerDeck[player][curDeck].getCard(selection)).append(" ");
             }
             ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
-            for (int i : selections)
-            {
+            for (int i : selections) {
                 selectionsList.add(i);
             }
             Collections.sort(selectionsList);
             int z = 0;
-            for(Integer e:selectionsList){
-                playerDeck[player][curDeck].pull(e-z);
+            for (Integer e : selectionsList) {
+                playerDeck[player][curDeck].pull(e - z);
                 z++;
             }
             System.out.println(str);
             return true;
-        }
-        Card curCard = playingPile.getCard(playingPile.length() - 1);
-        Card toPlay = playerDeck[player][curDeck].getCard(selections[0]);
-        if (toPlay.getValue() == 10) {
+        } else if (toPlay.getValue() == 10) {
             playingPile.purge();
             for (int selection : selections) {
                 playerDeck[player][curDeck].pull(selection);
             }
-            System.out.println("Player "+(player+1)+" played 10, one more turn");
+            System.out.println("Player " + (player + 1) + " played 10, one more turn");
             System.out.println(this);
             return false;
-        } else if (toPlay.compareTo(curCard) < 0) {
-            System.out.println("Card smaller than current card on pile, try again");
-            return false;
         } else {
-            StringBuilder str = new StringBuilder();
-            str.append("Player ").append(player+1).append(" played:  ");
-            for (int selection : selections) {
-                playingPile.put(playerDeck[player][curDeck].getCard(selection));
-                str.append(playerDeck[player][curDeck].getCard(selection)).append(" ");
+            Card curCard = playingPile.getCard(playingPile.length() - 1);
+            if (toPlay.compareTo(curCard) < 0 && curDeck != 2) {
+                System.out.println("Card smaller than current card on pile, try again");
+                return false;
+            } else if (toPlay.compareTo(curCard) < 0 && curDeck == 2) {
+                System.out.println("Hidden card is smaller than card on playing pile, picking up the pile");
+                for (int i = 0; i < playingPile.length(); i++) {
+                    playerDeck[player][0].put(playingPile.getCard(i));
+                }
+                playingPile.purge();
+            } else {
+                StringBuilder str = new StringBuilder();
+                str.append("Player ").append(player + 1).append(" played:  ");
+                for (int selection : selections) {
+                    playingPile.put(playerDeck[player][curDeck].getCard(selection));
+                    str.append(playerDeck[player][curDeck].getCard(selection)).append(" ");
+                }
+                ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
+                for (int i : selections) {
+                    selectionsList.add(i);
+                }
+                Collections.sort(selectionsList);
+                int z = 0;
+                for (Integer e : selectionsList) {
+                    playerDeck[player][curDeck].pull(e - z);
+                    z++;
+                }
+                System.out.println(str);
             }
-            ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
-            for (int i : selections)
-            {
-                selectionsList.add(i);
-            }
-            Collections.sort(selectionsList);
-            int z = 0;
-            for(Integer e:selectionsList){
-                playerDeck[player][curDeck].pull(e-z);
-                z++;
-            }
-            System.out.println(str);
         }
+
         return true;
     }
-    public boolean play (char c,int player){
+
+    public boolean play(char c, int player) {
         boolean turnOver = false;
-        switch(c){
+        switch (c) {
             case 'p' -> {
-                if(playingPile.length()==0){
+                if (playingPile.length() == 0) {
                     System.out.println("Pile empty");
-                }
-                else {
-                    for(int i = 0;i<playingPile.length();i++){
+                } else {
+                    System.out.println("Player "+(player+1)+" picked the pile up");
+                    for (int i = 0; i < playingPile.length(); i++) {
                         playerDeck[player][0].put(playingPile.getCard(i));
                     }
                     playingPile.purge();
-                    turnOver=true;
+                    turnOver = true;
                 }
             }
             case 'd' -> {
-                if(playingPile.length()==0){
+                if (mainDeck.length() == 0) {
                     System.out.println("Draw deck empty");
                 }
                 else {
                     Card drew = mainDeck.getCard(0);
                     mainDeck.pull(0);
-                    System.out.println("Player "+(player+1)+" drew "+drew);
-                    if(drew.compareTo(playingPile.getCard(playingPile.length()-1))<0){
+                    System.out.println("Player " + (player + 1) + " drew " + drew);
+                    if (drew.compareTo(playingPile.getCard(playingPile.length() - 1)) <  0&& drew.getValue() !=10 ) {
                         System.out.println("Drew card is smaller than current card on pile,picking the pile up");
                         playerDeck[player][0].put(drew);
-                        for(int i = 0;i<playingPile.length();i++){
+                        for (int i = 0; i < playingPile.length(); i++) {
                             playerDeck[player][0].put(playingPile.getCard(i));
                         }
                         playingPile.purge();
-                        turnOver=true;
-                    }
-                    else if(playingPile.length()==0|| !(drew.compareTo(playingPile.getCard(playingPile.length() - 1)) < 0)) {
+                        turnOver = true;
+                    } else if (playingPile.length() == 0 || !(drew.compareTo(playingPile.getCard(playingPile.length() - 1)) < 0)) {
                         System.out.println("Drew success");
                         playingPile.put(drew);
-                        turnOver=true;
+                        turnOver = true;
+                    } else if (drew.getValue()==10) {
+                        System.out.println("Drew 10 play one more turn:");
+                        if(playingPile.length() != 0) {
+                            playingPile.purge();
+                        }
                     }
                 }
             }
             case 'm' -> System.out.println(Palace.manual());
             case 'r' -> {
                 int curDeck = 3;
-                for (int i = 0; i < playerDeck[player].length-1; i++) {
+                for (int i = 0; i < playerDeck[player].length - 1; i++) {
                     if (playerDeck[player][i].length() != 0) {
                         curDeck = i;
                         break;
                     }
                 }
-                if (curDeck == 3){
-                    System.out.println("No available deck");
-                }
-                else {
-                    System.out.println(Ai.recommend(playingPile.getCard(playingPile.length() - 1),playerDeck[player][curDeck]));
+                if (curDeck == 3) {
+                    System.out.println("No visible deck");
+                } else {
+                    try {
+                        System.out.println(Ai.recommend(playingPile.getCard(playingPile.length() - 1), playerDeck[player][curDeck]));
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        System.out.println(Ai.recommend(playerDeck[player][curDeck]));
+                    }
                 }
             }
             case 's' -> {
                 int curDeck = 3;
-                for (int i = 0; i < playerDeck[player].length-1; i++) {
+                for (int i = 0; i < playerDeck[player].length - 1; i++) {
                     if (playerDeck[player][i].length() != 0) {
                         curDeck = i;
                         break;
                     }
                 }
-                if (curDeck == 3){
+                if (curDeck == 3) {
                     System.out.println("No available deck");
-                }
-                else {
+                } else {
                     playerDeck[player][curDeck].sort();
                     System.out.println("Sorted");
-                    System.out.println(this +"\nInput:");
+                    System.out.println(this + "\nInput:");
                 }
             }
+            case 'a' -> turnOver=this.autoPlay(player);
             default -> System.out.println("Invalid input");
         }
         return turnOver;
     }
+
     public boolean verify(int currentPlayer) {
         boolean gameOver = false;
-        if(playerDeck[currentPlayer][2].length()==0){
-            gameOver=true;
-        }
-        else if(mainDeck.length()!=0){
-            if(playerDeck[currentPlayer][0].length()<3){
-                StringBuilder str = new StringBuilder();
-                str.append("Player ").append(currentPlayer+1).append(" drew:");
-                for(int i = 0;i<=(3-playerDeck[currentPlayer][0].length())&&mainDeck.length()!=0;i++){
-                    playerDeck[currentPlayer][0].put(mainDeck.getCard(0));
-                    str.append("  ").append(mainDeck.getCard(0));
-                    mainDeck.pull(0);
-                }
-                System.out.println(str);
+        if (playerDeck[currentPlayer][2].length() == 0) {
+            gameOver = true;
+        } else if (mainDeck.length() != 0 && playerDeck[currentPlayer][0].length() < 3) {
+            StringBuilder str = new StringBuilder();
+            str.append("  Player ").append(currentPlayer + 1).append(" drew:  ");
+            while(!(playerDeck[currentPlayer][0].length()==3||mainDeck.length()==0)){
+                str.append(mainDeck.getCard(0)).append(" ");
+                playerDeck[currentPlayer][0].put(mainDeck.getCard(0));
+                mainDeck.pull(0);
             }
+            System.out.println(str);
         }
         return gameOver;
+    }
+    public boolean autoPlay(int player){
+        int[] selections;
+        int curDeck=2;
+        boolean turnOver;
+        for (int i = 0; i < playerDeck[player].length; i++) {
+            if (playerDeck[player][i].length() != 0) {
+                curDeck = i;
+                break;
+            }
+        }
+        if(curDeck!=2){
+            Deck deck = playerDeck[player][curDeck];
+            Deck cardsToPlay;
+            if(playingPile.length()==0){
+                cardsToPlay = Ai.think(deck);
+            }
+            else {
+                cardsToPlay = Ai.think(playingPile.getCard(playingPile.length()-1),deck);
+            }
+            selections = new int[cardsToPlay.length()];
+            for(int i = 0;i < selections.length;i++){
+                for(int z = 0;z < deck.length();z++){
+                    if(cardsToPlay.getCard(i).getValue()==deck.getCard(z).getValue()&&cardsToPlay.getCard(i).getSuit()==deck.getCard(z).getSuit()){
+                        selections[i]=z;
+                    }
+                }
+            }
+        }
+        else {
+            selections = new int[]{0};
+            return this.play(selections, player);
+        }
+        if(selections.length!=0){
+            turnOver=this.play(selections,player);
+        }
+        else{
+            if(mainDeck.length()==0){
+                turnOver=this.play('p',player);
+            }
+            else {
+                turnOver=this.play('d',player);
+            }
+        }
+        return turnOver;
+    }
+    public void autoSwap(int player){
+        Deck deck = new Deck();
+        for(int i = 0;i<playerDeck[player][0].length();i++){
+            deck.put(playerDeck[player][0].getCard(i));
+        }
+        for(int i = 0;i<playerDeck[player][1].length();i++){
+            deck.put(playerDeck[player][1].getCard(i));
+        }
+        playerDeck[player][0].purge();
+        playerDeck[player][1].purge();
+        Deck nonWild = new Deck();
+        Deck wild = new Deck();
+        //Separate between Wild Cards and Non-Wild to two different decks.
+        for (int i = 0; i < deck.length(); i++) {
+            if (deck.getCard(i).getValue() != 2 && deck.getCard(i).getValue() != 10) {
+                nonWild.put(deck.getCard(i));
+            } else {
+                wild.put(deck.getCard(i));
+            }
+        }
+        wild.sort();
+        nonWild.sort();
+        if(wild.length()!=0){
+            for(int i = 0;wild.length()!=0;i++){
+                if(i<3) {
+                    playerDeck[player][1].put(wild.getCard(wild.length() - 1));
+                    wild.pull(wild.length() - 1);
+                }
+                else {
+                    playerDeck[player][0].put(wild.getCard(0));
+                    wild.pull(0);
+                }
+            }
+        }
+        while(playerDeck[player][0].length()<3){
+            playerDeck[player][0].put(nonWild.getCard(0));
+            nonWild.pull(0);
+        }
+        while (playerDeck[player][1].length()<3){
+            playerDeck[player][1].put(nonWild.getCard(0));
+            nonWild.pull(0);
+        }
+        playerDeck[player][0].sort();
+        playerDeck[player][1].sort();
+        System.out.println("Player "+(player+1)+" auto-swapped");
+        System.out.println(this);
     }
 }

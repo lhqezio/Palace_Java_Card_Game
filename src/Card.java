@@ -18,7 +18,7 @@ public class Card implements Comparable<Card> {
     public int getValue() {
         return this.value;
     }
-
+    public suit getSuit() {return this.suit;}
     @Override
     public String toString() {
         StringBuilder cardString = new StringBuilder();
@@ -44,9 +44,7 @@ public class Card implements Comparable<Card> {
     }
     @Override
     public int compareTo(Card o) {
-        if(o.value==10){
-            throw new IllegalArgumentException("Handle 10 wildcard locally");
-        }
+
         if(this.value>o.value&&o.value!=2&&this.value!=2){
             return 1;
         }

@@ -15,8 +15,8 @@ public class Player {
             isHuman[i]= i < playerNum;
         }
     }
-    public boolean isHuman(int player){
-        return isHuman[player];
+    public boolean isHuman(int turn){
+        return isHuman[players.get(turn)];
     }
     public String whoGoFirst(){
         Collections.shuffle(players);
