@@ -35,7 +35,4 @@ public class Player {
     public int currentPlayer(int turn) {
         return players.get(turn);
     }
-    public void setWin(int turn){
-
-    }
 }

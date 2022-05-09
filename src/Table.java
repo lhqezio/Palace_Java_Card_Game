@@ -145,7 +145,7 @@ public class Table {
                 System.out.println("Card smaller than current card on pile, try again");
                 return false;
             } else if (toPlay.compareTo(curCard) < 0 && curDeck == 2) {
-                System.out.println("Hidden card is smaller than card on playing pile, picking up the pile");
+                System.out.println("Hidden card("+toPlay+") is smaller than card on playing pile, picking up the pile");
                 for (int i = 0; i < playingPile.length(); i++) {
                     playerDeck[player][0].put(playingPile.getCard(i));
                 }
@@ -174,18 +174,18 @@ public class Table {
                 }
                 System.out.println(str);
                 if(playingPile.length()>=4){
-                    int countdown = 1;
-                    int sameCard = 1;
-                    while (countdown<4){
-                        if(playingPile.getCard(playingPile.length()-countdown).getValue()==playingPile.getCard(playingPile.length()-(countdown+1)).getValue()){
-                            sameCard++;
+                    boolean turnOver = false;
+                    int sameConsecutiveValue = playingPile.getCard(playingPile.length()-1).getValue();
+                    for (int i = 2;i<=4;i++){
+                        if(!(playingPile.getCard(playingPile.length()-i).getValue()==sameConsecutiveValue)){
+                            turnOver=true;
+                            break;
                         }
-                        countdown++;
                     }
-                    if(sameCard==4){
-                        System.out.println("Four consecutive cards with the same rank, purge playing pile, and one more turn");
+                    if(!turnOver){
+                        System.out.println("Four consecutive card same rank, purge playing pile and one more turn\n"+this);
                         playingPile.purge();
-                        return this.verify(player);
+                        return gameOver(player);
                     }
                 }
             }
@@ -225,15 +225,28 @@ public class Table {
                         playingPile.purge();
                         turnOver = true;
                     } else if (playingPile.length() == 0 || !(drew.compareTo(playingPile.getCard(playingPile.length() - 1)) < 0)) {
-                        System.out.println("Drew success");
+                        System.out.println("Drew success\n"+this);
                         playingPile.put(drew);
-                        turnOver = true;
+                        if(playingPile.length()>=4){
+                            int sameConsecutiveValue = playingPile.getCard(playingPile.length()-1).getValue();
+                            for (int i = 2;i<=4;i++){
+                                if(!(playingPile.getCard(playingPile.length()-i).getValue()==sameConsecutiveValue)){
+                                    turnOver=true;
+                                    break;
+                                }
+                            }
+                            if(!turnOver){
+                                System.out.println("Four consecutive card same rank, purge playing pile and one more turn\n"+this);
+                                playingPile.purge();
+                                turnOver=gameOver(player);
+                            }
+                        }
                     } else if (drew.getValue() == 10) {
                         System.out.println("Drew 10,purge the pile then play one more turn:");
                         if (playingPile.length() != 0) {
                             playingPile.purge();
                         }
-                        turnOver = this.verify(player);
+                        turnOver = gameOver(player);
                     }
                 }
             }
@@ -279,20 +292,23 @@ public class Table {
     }
 
     public boolean verify(int currentPlayer) {
-        boolean gameOver = false;
-        if (playerDeck[currentPlayer][2].length() == 0&&playerDeck[currentPlayer][0].length() == 0) {
-            gameOver = true;
-        } else if (mainDeck.length() != 0 && playerDeck[currentPlayer][0].length() < 3) {
-            StringBuilder str = new StringBuilder();
-            str.append("  Player ").append(currentPlayer + 1).append(" drew:  ");
-            while (!(playerDeck[currentPlayer][0].length() == 3 || mainDeck.length() == 0)) {
-                str.append(mainDeck.getCard(0)).append(" ");
-                playerDeck[currentPlayer][0].put(mainDeck.getCard(0));
-                mainDeck.pull(0);
+        boolean gameOver=gameOver(currentPlayer);
+        if(!gameOver){
+            if (mainDeck.length() != 0 && playerDeck[currentPlayer][0].length() < 3) {
+                StringBuilder str = new StringBuilder();
+                str.append("  Player ").append(currentPlayer + 1).append(" drew:  ");
+                while (!(playerDeck[currentPlayer][0].length() == 3 || mainDeck.length() == 0)) {
+                    str.append(mainDeck.getCard(0)).append(" ");
+                    playerDeck[currentPlayer][0].put(mainDeck.getCard(0));
+                    mainDeck.pull(0);
+                }
+                System.out.println(str);
             }
-            System.out.println(str);
         }
         return gameOver;
+    }
+    private boolean gameOver(int currentPlayer){
+        return playerDeck[currentPlayer][2].length() == 0 && playerDeck[currentPlayer][0].length() == 0;
     }
 
     public boolean autoPlay(int player) {
