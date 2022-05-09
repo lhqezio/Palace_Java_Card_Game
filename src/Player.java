@@ -1,10 +1,12 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Player {
 
     private final ArrayList<Integer> players;
     private final boolean[] isHuman;
+    private int[] win;
 
     Player(int playerNum, int botNum) {
         players = new ArrayList<>();
@@ -33,5 +35,7 @@ public class Player {
     public int currentPlayer(int turn) {
         return players.get(turn);
     }
+    public void setWin(int turn){
 
+    }
 }

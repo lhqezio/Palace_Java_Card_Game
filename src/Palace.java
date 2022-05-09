@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -5,12 +6,22 @@ import java.util.regex.Pattern;
 
 public class Palace {
     public static void main(String[] args) {
+        int[] scoreBoard = new int[5];
+        Arrays.fill(scoreBoard,0);
         while (true) {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Palace\n1)Play\n2)Manual\n3)Quit\n*Reading manual first is highly recommended");
+            System.out.println("Palace\n1)Play\n2)Manual\n3)Scoreboard\n4)Quit\n*Reading manual first is highly recommended");
             String choice = sc.nextLine().toLowerCase();
             switch (choice) {
-                case "3", "quit" -> {
+                case "3", "scoreboard" -> {
+                    StringBuilder str = new StringBuilder();
+                    str.append("SCOREBOARD");
+                    for(int i = 0;i < scoreBoard.length;i++){
+                        str.append("\nPlayer ").append(i + 1).append(": ").append(scoreBoard[i]).append(" points");
+                    }
+                    System.out.println(str);
+                }
+                case "4", "quit" -> {
                     return;
                 }
                 case "2", "manual" -> System.out.println(manual());
@@ -56,7 +67,6 @@ public class Palace {
                     System.out.println(t);
                     System.out.println("Phase 1: Swap your card");
                     int curPlayer = 0;
-                    choice:
                     while (curPlayer < bot + numPlayer) {
                         if (p.isHuman(curPlayer)) {
                             System.out.println("Player " + (curPlayer + 1) + " do you want to swap card(y/n/a(auto-swap))");
@@ -93,10 +103,7 @@ public class Palace {
                                     }
                                 }
                                 case 'n' -> curPlayer++;
-                                case 'a' -> {
-                                    t.autoSwap(curPlayer);
-                                    break choice;
-                                }
+                                case 'a' -> t.autoSwap(curPlayer);
                                 default -> System.err.println("Invalid value");
                             }
                         } else {
@@ -150,8 +157,21 @@ public class Palace {
                         }
                         gameOver = t.verify(p.currentPlayer(turn));
                         if (gameOver) {
-                            System.out.println("Player " + (p.currentPlayer(turn) + 1) + " won");
+                            System.out.println("Player " + (p.currentPlayer(turn) + 1) + " won !!!!!!!!!!!");
+                            scoreBoard[p.currentPlayer(turn)]++;
                             System.out.println(t);
+                            System.out.println("What do you want to do now ?\n1)Quit\n2)Go to menu");
+                            boolean goToMenu=false;
+                            while (!goToMenu){
+                                char c = sc.next().charAt(0);
+                                switch (c){
+                                    case '1' -> {
+                                        return;
+                                    }
+                                    case '2' -> goToMenu=true;
+                                    default -> System.err.println("Invalid input try again");
+                                }
+                            }
                         } else {
                             turn++;
                             turnOver = false;
@@ -171,7 +191,7 @@ public class Palace {
     }
 
     public static String manual() {
-        return "Game rules can be found here: https://gamerules.com/rules/shithead-card-game/\nDuring phase two of the game,\nClick s to sort\n\nClick d for draw from the deck and play(use when you want to test your chance when you dont have a big enough card to play,\nif drew card is smaller than current card on playing pile , you pick up the pile and the drew card)\n\nClick p: pick the pile, Use when you have no playable card and dont want to risk your chance\n\nClick r for recommendation";
+        return "Game rules can be found here: https://gamerules.com/rules/shithead-card-game/\nDuring phase two of the game,\nClick s to sort\n\nClick d for draw from the deck and play(use when you want to test your chance when you dont have a big enough card to play,\nif drew card is smaller than current card on playing pile , you pick up the pile and the drew card)\n\nClick p: pick the pile, Use when you have no playable card and dont want to risk your chance\n\nClick r for recommendation\n\nClick a for autoplay";
     }
 
     public static void pause(int sec) {

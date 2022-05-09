@@ -97,6 +97,10 @@ public class Table {
 
     public boolean play(int[] selections, int player) {
         int curDeck = 0;
+        ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
+        for (int i : selections) {
+            selectionsList.add(i);
+        }
         for (int i = 0; i < playerDeck[player].length; i++) {
             if (playerDeck[player][i].length() != 0) {
                 curDeck = i;
@@ -119,10 +123,6 @@ public class Table {
                 playingPile.put(playerDeck[player][curDeck].getCard(selection));
                 str.append(playerDeck[player][curDeck].getCard(selection)).append(" ");
             }
-            ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
-            for (int i : selections) {
-                selectionsList.add(i);
-            }
             Collections.sort(selectionsList);
             int z = 0;
             for (Integer e : selectionsList) {
@@ -136,9 +136,9 @@ public class Table {
             for (int selection : selections) {
                 playerDeck[player][curDeck].pull(selection);
             }
-            System.out.println("Player " + (player + 1) + " played 10, one more turn");
+            System.out.println("Player " + (player + 1) + " played 10,purge the playing and one more turn");
             System.out.println(this);
-            return false;
+            return this.verify(player);
         } else {
             Card curCard = playingPile.getCard(playingPile.length() - 1);
             if (toPlay.compareTo(curCard) < 0 && curDeck != 2) {
@@ -149,6 +149,15 @@ public class Table {
                 for (int i = 0; i < playingPile.length(); i++) {
                     playerDeck[player][0].put(playingPile.getCard(i));
                 }
+                for (int selection : selections) {
+                    playerDeck[player][0].put(playerDeck[player][curDeck].getCard(selection));
+                }
+                Collections.sort(selectionsList);
+                int z = 0;
+                for (Integer e : selectionsList) {
+                    playerDeck[player][curDeck].pull(e - z);
+                    z++;
+                }
                 playingPile.purge();
             } else {
                 StringBuilder str = new StringBuilder();
@@ -157,10 +166,6 @@ public class Table {
                     playingPile.put(playerDeck[player][curDeck].getCard(selection));
                     str.append(playerDeck[player][curDeck].getCard(selection)).append(" ");
                 }
-                ArrayList<Integer> selectionsList = new ArrayList<>(selections.length);
-                for (int i : selections) {
-                    selectionsList.add(i);
-                }
                 Collections.sort(selectionsList);
                 int z = 0;
                 for (Integer e : selectionsList) {
@@ -168,6 +173,21 @@ public class Table {
                     z++;
                 }
                 System.out.println(str);
+                if(playingPile.length()>=4){
+                    int countdown = 1;
+                    int sameCard = 1;
+                    while (countdown<4){
+                        if(playingPile.getCard(playingPile.length()-countdown).getValue()==playingPile.getCard(playingPile.length()-(countdown+1)).getValue()){
+                            sameCard++;
+                        }
+                        countdown++;
+                    }
+                    if(sameCard==4){
+                        System.out.println("Four consecutive cards with the same rank, purge playing pile, and one more turn");
+                        playingPile.purge();
+                        return this.verify(player);
+                    }
+                }
             }
         }
 
@@ -209,10 +229,11 @@ public class Table {
                         playingPile.put(drew);
                         turnOver = true;
                     } else if (drew.getValue() == 10) {
-                        System.out.println("Drew 10 play one more turn:");
+                        System.out.println("Drew 10,purge the pile then play one more turn:");
                         if (playingPile.length() != 0) {
                             playingPile.purge();
                         }
+                        turnOver = this.verify(player);
                     }
                 }
             }
@@ -259,7 +280,7 @@ public class Table {
 
     public boolean verify(int currentPlayer) {
         boolean gameOver = false;
-        if (playerDeck[currentPlayer][2].length() == 0) {
+        if (playerDeck[currentPlayer][2].length() == 0&&playerDeck[currentPlayer][0].length() == 0) {
             gameOver = true;
         } else if (mainDeck.length() != 0 && playerDeck[currentPlayer][0].length() < 3) {
             StringBuilder str = new StringBuilder();
