@@ -13,7 +13,7 @@ public class Table {
             throw new IllegalArgumentException("Player number must be between 2 and 5 ");
         }
         int cardPerDeck = 3;
-        //3 cards per deck like game rule
+        //3 cards starting per deck like game rule
         this.playerNum = playerNum;
         this.playerDeck = new Deck[playerNum][3];
         //3 mentioned deck per person
@@ -130,15 +130,15 @@ public class Table {
                 z++;
             }
             System.out.println(str);
-            return true;
+            return clearDeck(player);
         } else if (toPlay.getValue() == 10) {
             playingPile.purge();
             for (int selection : selections) {
                 playerDeck[player][curDeck].pull(selection);
             }
-            System.out.println("Player " + (player + 1) + " played 10,purge the playing and one more turn");
+            System.out.println("Player " + (player + 1) + " played 10,purge the playing and one more turn(if did not win)");
             System.out.println(this);
-            return this.verify(player);
+            return this.gameOver(player);
         } else {
             Card curCard = playingPile.getCard(playingPile.length() - 1);
             if (toPlay.compareTo(curCard) < 0 && curDeck != 2) {
@@ -173,21 +173,7 @@ public class Table {
                     z++;
                 }
                 System.out.println(str);
-                if(playingPile.length()>=4){
-                    boolean turnOver = false;
-                    int sameConsecutiveValue = playingPile.getCard(playingPile.length()-1).getValue();
-                    for (int i = 2;i<=4;i++){
-                        if(!(playingPile.getCard(playingPile.length()-i).getValue()==sameConsecutiveValue)){
-                            turnOver=true;
-                            break;
-                        }
-                    }
-                    if(!turnOver){
-                        System.out.println("Four consecutive card same rank, purge playing pile and one more turn\n"+this);
-                        playingPile.purge();
-                        return gameOver(player);
-                    }
-                }
+                return clearDeck(player);
             }
         }
 
@@ -227,27 +213,15 @@ public class Table {
                     } else if (playingPile.length() == 0 || !(drew.compareTo(playingPile.getCard(playingPile.length() - 1)) < 0)) {
                         System.out.println("Drew success\n"+this);
                         playingPile.put(drew);
-                        if(playingPile.length()>=4){
-                            int sameConsecutiveValue = playingPile.getCard(playingPile.length()-1).getValue();
-                            for (int i = 2;i<=4;i++){
-                                if(!(playingPile.getCard(playingPile.length()-i).getValue()==sameConsecutiveValue)){
-                                    turnOver=true;
-                                    break;
-                                }
-                            }
-                            if(!turnOver){
-                                System.out.println("Four consecutive card same rank, purge playing pile and one more turn\n"+this);
-                                playingPile.purge();
-                                turnOver=gameOver(player);
-                            }
-                        }
+                        clearDeck(player);
                     } else if (drew.getValue() == 10) {
-                        System.out.println("Drew 10,purge the pile then play one more turn:");
+                        System.out.println("Drew 10,purge the pile then play one more turn(if didn't win):");
                         if (playingPile.length() != 0) {
                             playingPile.purge();
                         }
                         turnOver = gameOver(player);
                     }
+                    turnOver=clearDeck(player);
                 }
             }
             case 'm' -> System.out.println(Palace.manual());
@@ -310,6 +284,27 @@ public class Table {
     private boolean gameOver(int currentPlayer){
         return playerDeck[currentPlayer][2].length() == 0 && playerDeck[currentPlayer][0].length() == 0;
     }
+    private boolean clearDeck(int player){
+        boolean turnOver=true;
+        if(playingPile.length()>=4){
+            int sameConsecutiveValue = playingPile.getCard(playingPile.length()-1).getValue();
+            for (int i = 2;i<=4;i++){
+                if(!(playingPile.getCard(playingPile.length()-i).getValue()==sameConsecutiveValue)){
+                    turnOver=true;
+                    break;
+                }
+                else{
+                    turnOver=false;
+                }
+            }
+            if(!turnOver){
+                playingPile.purge();
+                System.out.println("Four consecutive card same rank, purge playing pile and one more turn(if you didnt win)\n"+this);
+                turnOver=gameOver(player);
+            }
+        }
+        return turnOver;
+    }
 
     public boolean autoPlay(int player) {
         int[] selections;
@@ -354,6 +349,7 @@ public class Table {
     }
 
     public void autoSwap(int player) {
+        //Idea here is to have the best cards on the showing deck and the worst on hand.
         Deck deck = new Deck();
         for (int i = 0; i < playerDeck[player][0].length(); i++) {
             deck.put(playerDeck[player][0].getCard(i));
